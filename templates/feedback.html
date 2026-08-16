@@ -1,0 +1,159 @@
+
+{% load static %}
+{% static "images" as baseUrl%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Feedback Page</title>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="{% static 'logins/images/icons/favicon.ico' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'logins/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'logins/font/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'logins/font/fonts/iconic/css/material-design-iconic-font.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'logins/vendor/animate/animate.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'logins/vendor/css-hamburgers/hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'logins/vendor/animsition/css/animsition.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'logins/vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'logins/vendor/daterangepicker/daterangepicker.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'logins/csss/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'logins/csss/css/main.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'styles/modern.css' %}">
+<!--===============================================================================================-->
+</head>
+<body>
+
+<div>
+		<div class="container-login100" style="background-image: url('{% static 'logins/images/bg-01.jpg' %}');">
+			<div class="wrap-login100 p-l-55 p-r-55 p-t-15 p-b-34">
+				<form action="/register"  method="POST" class="login100-form validate-form">
+					{% csrf_token %}
+					<span class="login100-form-title p-b-30">
+						Feedback
+					</span>
+
+					<div class="wrap-input100 validate-input" data-validate = "Username is reauired">
+						<span class="label-input100">Customer  Name</span>
+						<input class="input100" type="text" name="c_name" placeholder="Type your Name">
+						<span class="focus-input100" data-symbol="&#xf206;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Username is reauired">
+						<span class="label-input100">Car Name</span>
+						<input class="input100" type="text" name="comp" placeholder="Type Car Company Name">
+						<span class="focus-input100" data-symbol="&#xf206;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Username is reauired">
+						<span class="label-input100">Model Name</span>
+						<input class="input100" type="text" name="name" placeholder="Rate Price">
+						<span class="focus-input100" data-symbol="&#xf206;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Username is reauired">
+						<span class="label-input100">Rate Price</span>
+						<input class="input100" type="number" name="price" placeholder="Rate Price">
+						<span class="focus-input100" data-symbol="&#xf206;"></span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate="Password is required">
+						<span class="label-input100">Rate int D</span>
+						<input class="input100" type="number" name="int_design" placeholder="Rate Int. design">
+						<span class="focus-input100" data-symbol="&#xf190;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Password is required">
+						<span class="label-input100">Rate Ext. D</span>
+						<input class="input100" type="number" name="ext_design" placeholder="Rate Ext. Design">
+						<span class="focus-input100" data-symbol="&#xf190;"></span>
+					</div>
+										<div class="wrap-input100 validate-input" data-validate="Password is required">
+						<span class="label-input100">Rate mileage</span>
+						<input class="input100" type="number" name="mileage" placeholder="Rate Int. design">
+						<span class="focus-input100" data-symbol="&#xf190;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Password is required">
+						<span class="label-input100">Rate service_cost</span>
+						<input class="input100" type="number" name="service_cost" placeholder="Rate Ext. Design">
+						<span class="focus-input100" data-symbol="&#xf190;"></span>
+					</div>
+										<div class="wrap-input100 validate-input" data-validate="Password is required">
+						<span class="label-input100">Rate safety_score</span>
+						<input class="input100" type="number" name="safety_score" placeholder="Rate Int. design">
+						<span class="focus-input100" data-symbol="&#xf190;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Password is required">
+						<span class="label-input100">Any Suggestion</span>
+						<input class="input100" type="text" name="suggestion" placeholder="Rate Ext. Design">
+						<span class="focus-input100" data-symbol="&#xf190;"></span>
+					</div>
+					<br>
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<button type="submit" class="login100-form-btn"> Submit </button>
+						</div>
+					</div>
+					<div class="txt1 text-center p-t-54 p-b-20">
+						<span>
+                            <a href="http://127.0.0.1:8000/accounts/login" class="txt2">
+							    <b>Login</b>
+						    </a><br>
+							Or Login Using
+						</span>
+					</div>
+
+					<div class="flex-c-m">
+						<a href="#" class="login100-social-item bg1">
+							<i class="fa fa-facebook"></i>
+						</a>
+
+						<a href="#" class="login100-social-item bg2">
+							<i class="fa fa-twitter"></i>
+						</a>
+
+						<a href="#" class="login100-social-item bg3">
+							<i class="fa fa-google"></i>
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="dropDownSelect1"></div>
+
+<!--===============================================================================================-->
+	<script src="{% static 'logins/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'logins/vendor/animsition/js/animsition.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'logins/vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'logins/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'logins/vendor/select2/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'logins/vendor/daterangepicker/moment.min.js' %}"></script>
+	<script src="{% static 'logins/vendor/daterangepicker/daterangepicker.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'logins/vendor/countdowntime/countdowntime.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'logins/jss/js/main.js' %}"></script>
+
+
+
+</body>
+</html>

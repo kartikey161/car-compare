@@ -1,0 +1,17 @@
+<div class="feature-row">
+    <div class="feature-name">{{ name }}</div>
+    <div class="feature-val car-1-color">
+        {% if v1 %}
+            <i class="fa-solid fa-check val-true"></i>
+        {% else %}
+            <i class="fa-solid fa-xmark val-false"></i>
+        {% endif %}
+    </div>
+    <div class="feature-val car-2-color">
+        {% if v2 %}
+            <i class="fa-solid fa-check val-true"></i>
+        {% else %}
+            <i class="fa-solid fa-xmark val-false"></i>
+        {% endif %}
+    </div>
+</div>

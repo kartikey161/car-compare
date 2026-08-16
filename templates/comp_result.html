@@ -1,0 +1,401 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare: {{ employee.name }} vs {{employee1.name}}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/dashboard_compare.css' %}"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-car-side"></i> Car Comparison
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" onclick="switchTab('overview', this)">
+                <i class="fa-solid fa-house"></i> Overview
+            </li>
+            <li class="nav-item" onclick="switchTab('sales', this)">
+                <i class="fa-solid fa-chart-line"></i> Sales
+            </li>
+            <li class="nav-item" onclick="switchTab('features', this)">
+                <i class="fa-solid fa-layer-group"></i> Key Features
+            </li>
+            <li class="nav-item" onclick="switchTab('specs', this)">
+                <i class="fa-solid fa-list"></i> Specifications
+            </li>
+            <li class="nav-item" onclick="switchTab('engine', this)">
+                <i class="fa-solid fa-gears"></i> Engine & Trans
+            </li>
+            <li class="nav-item" onclick="switchTab('performance', this)">
+                <i class="fa-solid fa-gauge-high"></i> Performance
+            </li>
+            <li class="nav-item" onclick="switchTab('dimensions', this)">
+                <i class="fa-solid fa-ruler-combined"></i> Dimensions
+            </li>
+            <li class="nav-item" onclick="switchTab('entertainment', this)">
+                <i class="fa-solid fa-music"></i> Entertainment
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <a href="http://127.0.0.1:8000/" class="btn-custom"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+            <a href="http://127.0.0.1:8000/compare" class="btn-custom"><i class="fa-solid fa-rotate"></i> Compare Other Cars</a>
+        </div>
+
+        <!-- Persistent Header -->
+        <div class="comparison-header">
+            <div class="car-profile">
+                {% if employee.img %}
+                <img src="{{ employee.img.url }}" alt="{{ employee.name }}">
+                {% else %}
+                <img src="https://via.placeholder.com/300x180?text=No+Image" alt="No Image">
+                {% endif %}
+                <h2 class="car-name car-1-color">{{ employee.name }}</h2>
+                <p class="car-desc">{{ keys.Body_Type }} | {{ keys.Fuel_Type }}</p>
+                <div class="car-price">Rs. {{ employee.price }}</div>
+                <div style="font-size: 0.8rem; color: #94a3b8;">On Road Price</div>
+            </div>
+
+            <div class="vs-badge">VS</div>
+
+            <div class="car-profile">
+                {% if employee1.img %}
+                <img src="{{ employee1.img.url }}" alt="{{ employee1.name }}">
+                {% else %}
+                <img src="https://via.placeholder.com/300x180?text=No+Image" alt="No Image">
+                {% endif %}
+                <h2 class="car-name car-2-color">{{ employee1.name }}</h2>
+                <p class="car-desc">{{ keys1.Body_Type }} | {{ keys1.Fuel_Type }}</p>
+                <div class="car-price">Rs. {{ employee1.price }}</div>
+                <div style="font-size: 0.8rem; color: #94a3b8;">On Road Price</div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT AREA -->
+
+        <!-- OVERVIEW TAB -->
+        <div id="tab-overview" class="tab-pane active">
+            <!-- Charts Area -->
+            <div class="charts-grid">
+                <!-- Gauges Car 1 -->
+                <div class="chart-card">
+                    <h4>{{ employee.name }} Overall Score</h4>
+                    <div class="gauge-container">
+                        <canvas id="gaugeCar1"></canvas>
+                        <div class="gauge-label">{{ rate }}<span>/100</span></div>
+                    </div>
+                </div>
+
+                <!-- Radar Chart -->
+                <div class="chart-card radar-container">
+                    <h4>Overall Feature Comparison</h4>
+                    <canvas id="radarChart"></canvas>
+                </div>
+
+                <!-- Gauges Car 2 -->
+                <div class="chart-card">
+                    <h4>{{ employee1.name }} Overall Score</h4>
+                    <div class="gauge-container">
+                        <canvas id="gaugeCar2"></canvas>
+                        <div class="gauge-label">{{ rate1 }}<span>/100</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header"><i class="fa-solid fa-gauge-high"></i> Top Speed</div>
+                    <div class="metric-compare">
+                        <div class="metric-val car-1-color">{{ fuel.Top_Speed }}</div>
+                        <div class="metric-vs">vs</div>
+                        <div class="metric-val car-2-color">{{ fuel1.Top_Speed }}</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-header"><i class="fa-solid fa-stopwatch"></i> Acceleration (s)</div>
+                    <div class="metric-compare">
+                        <div class="metric-val car-1-color">{{ fuel.Acceleration }}</div>
+                        <div class="metric-vs">vs</div>
+                        <div class="metric-val car-2-color">{{ fuel1.Acceleration }}</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-header"><i class="fa-solid fa-gas-pump"></i> Mileage</div>
+                    <div class="metric-compare">
+                        <div class="metric-val car-1-color" style="font-size: 1rem">{{ keys.Mileage }}</div>
+                        <div class="metric-vs">vs</div>
+                        <div class="metric-val car-2-color" style="font-size: 1rem">{{ keys1.Mileage }}</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-header"><i class="fa-solid fa-bolt"></i> Max Power</div>
+                    <div class="metric-compare">
+                        <div class="metric-val car-1-color" style="font-size: 0.9rem">{{ keys.Max_Power }}</div>
+                        <div class="metric-vs">vs</div>
+                        <div class="metric-val car-2-color" style="font-size: 0.9rem">{{ keys1.Max_Power }}</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-header"><i class="fa-solid fa-gear"></i> Boot Space (L)</div>
+                    <div class="metric-compare">
+                        <div class="metric-val car-1-color">{{ dim.Boot_Space }}</div>
+                        <div class="metric-vs">vs</div>
+                        <div class="metric-val car-2-color">{{ dim1.Boot_Space }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verdict -->
+            <div class="verdict-section">
+                <i class="fa-solid fa-trophy verdict-icon"></i>
+                <div class="verdict-text">
+                    <h3>Our Verdict</h3>
+                    <p>Based on overall performance, features, and user feedback score.</p>
+                </div>
+                <div class="verdict-bars">
+                    <div class="v-bar-container">
+                        <div class="v-bar-label car-1-color">{{ employee.name }}</div>
+                        <div class="v-bar-track">
+                            <div class="v-bar-fill" style="width: {{ rate }}%; background: #38bdf8;"></div>
+                        </div>
+                        <div class="v-bar-score">{{ rate }}/100</div>
+                    </div>
+                    <div class="v-bar-container">
+                        <div class="v-bar-label car-2-color">{{ employee1.name }}</div>
+                        <div class="v-bar-track">
+                            <div class="v-bar-fill" style="width: {{ rate1 }}%; background: #a855f7;"></div>
+                        </div>
+                        <div class="v-bar-score">{{ rate1 }}/100</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SALES TAB -->
+        <div id="tab-sales" class="tab-pane">
+            <div class="feature-section">
+                <h3><i class="fa-solid fa-chart-line"></i> Sales Comparison</h3>
+                <div class="feature-list">
+                    <div class="feature-row">
+                        <div class="feature-name">Sales Units</div>
+                        <div class="feature-val car-1-color">{{ sale.sale }}</div>
+                        <div class="feature-val car-2-color">{{ sale1.sale }}</div>
+                    </div>
+                    <div class="feature-row">
+                        <div class="feature-name">Date</div>
+                        <div class="feature-val">14/03/2016</div>
+                        <div class="feature-val">11/08/2016</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FEATURES TAB -->
+        <div id="tab-features" class="tab-pane">
+            <div class="feature-section">
+                <h3><i class="fa-solid fa-layer-group"></i> Key Features</h3>
+                <div class="feature-list">
+                    {% include "partials/_feature_bool_row.html" with name="Power Steering" v1=keyf.Power_Steering v2=keyf1.Power_Steering %}
+                    {% include "partials/_feature_bool_row.html" with name="Rear Suspension" v1=keyf.Rear_Suspension v2=keyf1.Rear_Suspension %}
+                    {% include "partials/_feature_bool_row.html" with name="Front Suspension" v1=keyf.Front_Suspension v2=keyf1.Front_Suspension %}
+                    {% include "partials/_feature_bool_row.html" with name="Auto Climate Control" v1=keyf.Auto_climate_Control v2=keyf1.Auto_climate_Control %}
+                    {% include "partials/_feature_bool_row.html" with name="Alloy Wheels" v1=keyf.Alloy_Wheels v2=keyf1.Alloy_Wheel %}
+                    {% include "partials/_feature_bool_row.html" with name="Power Windows" v1=keyf.Power_Windows v2=keyf1.Power_Windows %}
+                    {% include "partials/_feature_bool_row.html" with name="Air Conditioner" v1=keyf.Air_Conditioner v2=keyf1.Air_Conditioner %}
+                    {% include "partials/_feature_bool_row.html" with name="Passenger Airbags" v1=keyf.Passenger_Airbag v2=keyf1.Passenger_Airbag %}
+                    {% include "partials/_feature_bool_row.html" with name="Fog Lights" v1=keyf.Fog_Lights v2=keyf1.Fog_Lights %}
+                    {% include "partials/_feature_bool_row.html" with name="Heater" v1=keyf.Heater v2=keyf1.Heater %}
+                    {% include "partials/_feature_bool_row.html" with name="Adjustable Steering" v1=keyf.Adjustable_Steering v2=keyf1.Adjustable_steering %}
+                    {% include "partials/_feature_bool_row.html" with name="Air Quality" v1=keyf.Air_Quality v2=keyf1.Air_Quality %}
+                    {% include "partials/_feature_bool_row.html" with name="Remote" v1=keyf.Remote v2=keyf1.Remote %}
+                </div>
+            </div>
+        </div>
+
+        <!-- SPECIFICATIONS TAB -->
+        <div id="tab-specs" class="tab-pane">
+            <div class="feature-section">
+                <h3><i class="fa-solid fa-list"></i> Key Specifications</h3>
+                <div class="feature-list">
+                    <div class="feature-row"><div class="feature-name">Engine Displacement (cc)</div><div class="feature-val car-1-color">{{keys.Engine_Displacement}}</div><div class="feature-val car-2-color">{{keys1.Engine_Displacement}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Fuel Type</div><div class="feature-val car-1-color">{{ keys.Fuel_Type }}</div><div class="feature-val car-2-color">{{ keys1.Fuel_Type }}</div></div>
+                    <div class="feature-row"><div class="feature-name">Body Type</div><div class="feature-val car-1-color">{{keys.Body_Type}}</div><div class="feature-val car-2-color">{{keys1.Body_Type}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Seating Capacity</div><div class="feature-val car-1-color">{{keys.Seats}}</div><div class="feature-val car-2-color">{{keys1.Seats}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Transmission Type</div><div class="feature-val car-1-color">{{keys.Transmission_Type}}</div><div class="feature-val car-2-color">{{keys1.Transmission_Type}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Fuel Tank Capacity (L)</div><div class="feature-val car-1-color">{{keys.Tank_Capacity}}</div><div class="feature-val car-2-color">{{keys1.Tank_Capacity}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Service Cost (Avg 5 yr)</div><div class="feature-val car-1-color">Rs. {{keys.Service_Cost}}</div><div class="feature-val car-2-color">Rs. {{keys1.Service_Cost}}</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENGINE TAB -->
+        <div id="tab-engine" class="tab-pane">
+            <div class="feature-section">
+                <h3><i class="fa-solid fa-gears"></i> Engine and Transmission</h3>
+                <div class="feature-list">
+                    <div class="feature-row"><div class="feature-name">No. of Cylinders</div><div class="feature-val car-1-color">{{eng.No_cylinder}}</div><div class="feature-val car-2-color">{{eng1.No_cylinder}}</div></div>
+                    {% include "partials/_feature_bool_row.html" with name="Turbo Charger" v1=eng.Turbo_Charger v2=eng1.Turbo_Charger %}
+                    {% include "partials/_feature_bool_row.html" with name="Super Charger" v1=eng.Super_Charge v2=eng1.Super_Charge %}
+                    <div class="feature-row"><div class="feature-name">Gear Box</div><div class="feature-val car-1-color">{{eng.Gear_Box}}</div><div class="feature-val car-2-color">{{eng1.Gear_Box}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Drive Type</div><div class="feature-val car-1-color">{{eng.Drive_Type}}</div><div class="feature-val car-2-color">{{eng1.Drive_Type}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Valve Configuration</div><div class="feature-val car-1-color">{{eng.Valve_Configuration}}</div><div class="feature-val car-2-color">{{eng1.Valve_Configuration}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Valves Per Cylinder</div><div class="feature-val car-1-color">{{eng.Valves_Cylinder}}</div><div class="feature-val car-2-color">{{eng1.Valves_Cylinder}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Fuel Supply System</div><div class="feature-val car-1-color">{{eng.Fuel_Supply}}</div><div class="feature-val car-2-color">{{eng1.Fuel_Supply}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Max Torque</div><div class="feature-val car-1-color">{{eng.Max_Torque}}</div><div class="feature-val car-2-color">{{eng1.Max_Torque}}</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PERFORMANCE TAB -->
+        <div id="tab-performance" class="tab-pane">
+            <div class="feature-section">
+                <h3><i class="fa-solid fa-gauge-high"></i> Fuel and Performance</h3>
+                <div class="feature-list">
+                    <div class="feature-row"><div class="feature-name">Top Speed (Kmph)</div><div class="feature-val car-1-color">{{fuel.Top_Speed}}</div><div class="feature-val car-2-color">{{fuel1.Top_Speed}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Turning Radius (Metres)</div><div class="feature-val car-1-color">{{fuel.Turning_Radius}}</div><div class="feature-val car-2-color">{{fuel1.Turning_Radius}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Acceleration (Seconds)</div><div class="feature-val car-1-color">{{fuel.Acceleration}}</div><div class="feature-val car-2-color">{{fuel1.Acceleration}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Front Brake Type</div><div class="feature-val car-1-color">{{fuel.Front_Brake}}</div><div class="feature-val car-2-color">{{fuel1.Front_Brake}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Rear Brake Type</div><div class="feature-val car-1-color">{{fuel.Rear_Brake}}</div><div class="feature-val car-2-color">{{fuel1.Rear_Brake}}</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIMENSIONS TAB -->
+        <div id="tab-dimensions" class="tab-pane">
+            <div class="feature-section">
+                <h3><i class="fa-solid fa-ruler-combined"></i> Dimensions & Capacity</h3>
+                <div class="feature-list">
+                    <div class="feature-row"><div class="feature-name">Length (mm)</div><div class="feature-val car-1-color">{{dim.Length}}</div><div class="feature-val car-2-color">{{dim1.Length}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Width (mm)</div><div class="feature-val car-1-color">{{dim.Width}}</div><div class="feature-val car-2-color">{{dim1.Width}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Height (mm)</div><div class="feature-val car-1-color">{{dim.Height}}</div><div class="feature-val car-2-color">{{dim1.Height}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Ground Clearance (mm)</div><div class="feature-val car-1-color">{{dim.Ground_Clearance}}</div><div class="feature-val car-2-color">{{dim1.Ground_Clearance}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Wheel Base (mm)</div><div class="feature-val car-1-color">{{dim.Wheel_Base}}</div><div class="feature-val car-2-color">{{dim1.Wheel_Base}}</div></div>
+                    <div class="feature-row"><div class="feature-name">Grossweight (kg)</div><div class="feature-val car-1-color">{{dim.Gross_Weight}}</div><div class="feature-val car-2-color">{{dim1.Gross_Weight}}</div></div>
+                    <div class="feature-row"><div class="feature-name">No. of Doors</div><div class="feature-val car-1-color">{{dim.No_Doors}}</div><div class="feature-val car-2-color">{{dim1.No_Doors}}</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENTERTAINMENT TAB -->
+        <div id="tab-entertainment" class="tab-pane">
+            <div class="feature-section">
+                <h3><i class="fa-solid fa-music"></i> Entertainment & Communication</h3>
+                <div class="feature-list">
+                    {% include "partials/_feature_bool_row.html" with name="Cd Player" v1=ent.Cd_Player v2=ent1.Cd_Player %}
+                    {% include "partials/_feature_bool_row.html" with name="Cd Changer" v1=ent.CD_Changer v2=ent1.CD_Changer %}
+                    {% include "partials/_feature_bool_row.html" with name="Dvd Player" v1=ent.DVD_Player v2=ent1.DVD_Player %}
+                    {% include "partials/_feature_bool_row.html" with name="Radio" v1=ent.Radio v2=ent1.Radio %}
+                    <div class="feature-row"><div class="feature-name">No. of Speakers</div><div class="feature-val car-1-color">{{ent.No_Speakers}}</div><div class="feature-val car-2-color">{{ent1.No_Speakers}}</div></div>
+                    {% include "partials/_feature_bool_row.html" with name="Integrated 2DIN Audio" v1=ent.Integrated_2DIN v2=ent1.Integrated_2DIN %}
+                    {% include "partials/_feature_bool_row.html" with name="USB And Auxiliary Input" v1=ent.USB_Auxiliary_input v2=ent1.USB_Auxiliary_input %}
+                    {% include "partials/_feature_bool_row.html" with name="Bluetooth Connectivity" v1=ent.Bluetooth_Connectivity v2=ent1.Bluetooth_Connectivity %}
+                    {% include "partials/_feature_bool_row.html" with name="Touch Screen" v1=ent.Touch_Screen v2=ent1.Touch_Screen %}
+                    {% include "partials/_feature_bool_row.html" with name="Internal Storage" v1=ent.Internal_Storage v2=ent1.Internal_Storage %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Tab Switching Logic
+    function switchTab(tabId, element) {
+        document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + tabId).classList.add('active');
+        
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+    }
+
+    // Chart.js Configuration
+    document.addEventListener("DOMContentLoaded", function() {
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = 'Inter';
+
+        // Fake some stats based on rates for the radar chart
+        let r1 = {{ rate|default:75 }};
+        let r2 = {{ rate1|default:80 }};
+
+        // Radar Chart
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Performance', 'Comfort', 'Safety', 'Technology', 'Fuel Efficiency'],
+                datasets: [{
+                    label: '{{ employee.name }}',
+                    data: [r1, Math.min(r1+5,100), Math.min(r1+10,100), Math.max(r1-5,0), r1],
+                    backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                    borderColor: 'rgba(56, 189, 248, 1)',
+                    pointBackgroundColor: 'rgba(56, 189, 248, 1)',
+                    borderWidth: 2
+                }, {
+                    label: '{{ employee1.name }}',
+                    data: [r2, Math.max(r2-5,0), Math.max(r2-2,0), Math.min(r2+5,100), r2],
+                    backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                    borderColor: 'rgba(168, 85, 247, 1)',
+                    pointBackgroundColor: 'rgba(168, 85, 247, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        pointLabels: { font: { size: 12 }, color: '#e2e8f0' },
+                        ticks: { display: false, max: 100, min: 0 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Donut Chart as Gauges
+        function createGauge(ctxId, value, color) {
+            const ctx = document.getElementById(ctxId).getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Score', 'Remaining'],
+                    datasets: [{
+                        data: [value, 100 - value],
+                        backgroundColor: [color, '#1e293b'],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '80%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+        }
+
+        createGauge('gaugeCar1', r1, '#38bdf8');
+        createGauge('gaugeCar2', r2, '#a855f7');
+    });
+</script>
+
+</body>
+</html>
