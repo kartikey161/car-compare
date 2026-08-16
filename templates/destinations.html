@@ -355,15 +355,35 @@
 	</div>
 </div>
 
-			<div class="row destinations_row" style="padding-top:5px">
-				<div class="col">
-					<div class="destinations_container item_grid">
-						<!-- Destination -->
-						<div class="destination item">
-
-                    </div>
+			{% if related_cars %}
+			<div class="row" style="padding-top:40px; padding-bottom: 20px;">
+				<div class="col text-center">
+					<div class="section_subtitle">Recommendations</div>
+					<div class="section_title"><h2>Related Cars You May Like</h2></div>
 				</div>
 			</div>
+			<div class="row destinations_row">
+				<div class="col">
+					<div class="destinations_container item_grid">
+						{% for car in related_cars %}
+						<div class="destination item">
+							<div class="destination_image">
+								<img src="{{car.img.url}}" alt="{{car.name}}">
+								{% if car.offer %}
+								<div class="spec_offer text-center"><a href="#">Special Offer</a></div>
+								{% endif %}
+							</div>
+							<div class="destination_content">
+								<div class="destination_title"><a href="/show/{{ car.id }}">{{car.name}}</a></div>
+								<div class="destination_subtitle"><p>Brand: <strong>{{car.comp}}</strong> &nbsp;|&nbsp; {{car.decs}}</p></div>
+								<div class="destination_price">Price : Rs. {{car.price}}/-</div>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+			{% endif %}
 		</div>
 	</div>
 </div>

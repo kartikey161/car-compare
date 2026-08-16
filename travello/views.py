@@ -27,7 +27,22 @@ def show(request, id):
     ent = Entertainment_Comm.objects.get(name=n)
     sale = Sales.objects.get(name=n)
 
-    return render(request, 'destinations.html', {'employee': employee, 'keys': keys, 'keyf': keyf, 'eng': eng,'fuel': fuel, 'dim': dim, 'ent': ent, 'sale': sale})
+    # Fetch related cars from the same brand or other cars (excluding current car)
+    related_cars = Destination.objects.filter(comp=employee.comp).exclude(id=id)
+    if not related_cars.exists():
+        related_cars = Destination.objects.exclude(id=id)[:4]
+
+    return render(request, 'destinations.html', {
+        'employee': employee,
+        'keys': keys,
+        'keyf': keyf,
+        'eng': eng,
+        'fuel': fuel,
+        'dim': dim,
+        'ent': ent,
+        'sale': sale,
+        'related_cars': related_cars
+    })
 
 # Create your views here.
 def register(request):
