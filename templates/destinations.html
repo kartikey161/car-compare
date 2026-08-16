@@ -64,12 +64,14 @@
 							<nav class="main_nav">
 								<ul class="d-flex flex-row align-items-start justify-content-start">
 									<li class="active"><a href="http://127.0.0.1:8000/">Home</a></li>
+									<li><a href="/compare/">Compare</a></li>
+									<li><a href="{% url 'cart:cart_detail' %}"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 									{% if user.is_authenticated %}
 									<li><font color="white"> Hello {{user.first_name}}</font></li>
-									<li><a href="\accounts/logout">Logout</a></li>
+									<li><a href="/accounts/logout">Logout</a></li>
 									{% else %}
-									<li><a href="accounts/register">Register</a></li>
-									<li><a href="accounts/login">Login</a></li>
+									<li><a href="/accounts/register">Register</a></li>
+									<li><a href="/accounts/login">Login</a></li>
 									{% endif %}
 									<li><a href="#">Contact</a></li>
 								</ul>
@@ -129,6 +131,10 @@
 								<div class="destination_title"><a href="#"></a></div>
                                 <div class="destination_price">{{employee.name}}</div>
 								<div class="destination_subtitle"><p>Price Rs. : {{employee.price}}/-</p></div>
+								<form action="{% url 'cart:cart_add' employee.id %}" method="post" style="margin-top: 15px;">
+									{% csrf_token %}
+									<button type="submit" class="btn btn-primary btn-block"><i class="fa fa-shopping-cart"></i> Add to Booking Cart</button>
+								</form>
 							</div>
 						</div>
 		</div>

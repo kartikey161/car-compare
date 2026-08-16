@@ -35,6 +35,8 @@
 							<nav class="main_nav">
 								<ul class="d-flex flex-row align-items-start justify-content-start">
 									<li class="active"><a href="http://127.0.0.1:8000/">Home</a></li>
+									<li><a href="/compare/">Compare</a></li>
+									<li><a href="{% url 'cart:cart_detail' %}"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 									{% if user.is_authenticated %}
 									<li class="nav-link"> <font color="white"> Hello {{user.first_name}}</font></li>
 									<li><a href="http://127.0.0.1:8000/admin">Data Entry</a> </li>
@@ -104,6 +106,10 @@
 								<div class="destination_title"><a href="/show/{{ dest.id }}">{{dest.name}}</a></div>
 								<div class="destination_subtitle"><p>Brand: <strong>{{dest.comp}}</strong> &nbsp;|&nbsp; {{dest.decs}}</p></div>
 								<div class="destination_price">Price : Rs. {{dest.price}}</div>
+								<form action="{% url 'cart:cart_add' dest.id %}" method="post" style="margin-top: 10px;">
+									{% csrf_token %}
+									<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+								</form>
 							</div>
 						</div>
 						{% endfor%}
